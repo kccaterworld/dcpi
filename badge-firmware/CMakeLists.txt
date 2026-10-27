@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.13)
 
-set(PICO_BOARD pico2 CACHE STRING "Target board")
+set(PICO_BOARD defcon32_badge CACHE STRING "Target board")
 
 include($ENV{PICO_SDK_PATH}/external/pico_sdk_import.cmake)
 
-project(pi_badge C ASM)
+project(pi_badge C CXX ASM)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -20,6 +20,7 @@ add_executable(pi_badge
     src/touch.c
     src/battery.c
     src/leds.c
+    src/buttons.c
     src/dashboard.c
     src/connection.c
 )
