@@ -41,24 +41,27 @@
 
 // Display (2.4" 240x320, ST7789 per the schematic note)
 // These pins don't match the chip's hardware SPI, so display.c bit-bangs them.
-#define PIN_DISPLAY_DC      DEFCON32_BADGE_DISPLAY_RS_PIN  // GPIO 5 (data/command)
-#define PIN_DISPLAY_MOSI    DEFCON32_BADGE_DISPLAY_DO_PIN  // GPIO 6
-#define PIN_DISPLAY_SCK     DEFCON32_BADGE_DISPLAY_SCK_PIN // GPIO 8
-#define PIN_DISPLAY_CS      DEFCON32_BADGE_DISPLAY_CS_PIN  // GPIO 9
-#define PIN_DISPLAY_BL      DEFCON32_BADGE_DISPLAY_BL_PIN  // GPIO 10 (backlight, high = on)
+#define PIN_DISPLAY_DC      DEFCON32_BADGE_DISPLAY_RS_PIN  // GPIO 5  (Data/Command)
+#define PIN_DISPLAY_MOSI    DEFCON32_BADGE_DISPLAY_DO_PIN  // GPIO 6  (Master Out Slave In)
+#define PIN_DISPLAY_SCK     DEFCON32_BADGE_DISPLAY_SCK_PIN // GPIO 8  (Serial ClocK)
+#define PIN_DISPLAY_CS      DEFCON32_BADGE_DISPLAY_CS_PIN  // GPIO 9  (active low Chip Select)
+#define PIN_DISPLAY_BL      DEFCON32_BADGE_DISPLAY_BL_PIN  // GPIO 10 (active high BackLight)
 
-// Not confirmed for this panel. If the picture looks wrong, change these:
-//   colors look inverted (black shows white)  -> flip DISPLAY_INVERT
-//   red and blue swapped                      -> toggle 0x08 in DISPLAY_MADCTL
-//   image upside down / mirrored              -> try 0x60, 0xA0, 0xE0, 0x20
-//   (for portrait, use 0x00 and swap WIDTH/HEIGHT)
-#define DISPLAY_WIDTH       320
-#define DISPLAY_HEIGHT      240
-#define DISPLAY_MADCTL      0x60
-#define DISPLAY_INVERT      0
+/* MADCTL bit meanings
+   Bit 7: Col/Y Adress order:   0: top to bottom, 1: bottom to top
+   Bit 6: Row/X Adress order:   0: left to right, 1: right to left
+   Bit 5: Orientation:          0: portrait (normal), 1: landscape (exchange xy)
+   Bit 4: Refresh order:        0: top to bottom, 1: bottom to top
+   Bit 3: Color order:          0: RGB, 1: BGR
+   Bits 2-0: Unused             0: good idea, 1: dont break things be smart
+*/
+#define DISPLAY_WIDTH       320  // 320px wide
+#define DISPLAY_HEIGHT      240  // 240px tall
+#define DISPLAY_MADCTL      0b01100000 // color depth and rotation
+#define DISPLAY_INVERT      0    // dont invert colors
 
-// Busy-wait cycles per half clock in the bit-banged SPI. Raise it if the
-// screen shows garbage; lower it for speed.
-#define DISPLAY_BITBANG_DELAY 8
+// Busy-wait cycles per half clock in the bit-banged SPI
+// lower = speed, higher =  accurate
+#define DISPLAY_BITBANG_DELAY 8 // 8 cycles per half clock, 62.5 MHz SPI equivalent
 
 #endif
