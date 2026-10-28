@@ -29,18 +29,18 @@ static void draw_screen(void) {
 
     // Colored bars across the top: if these show in the wrong colors,
     // see the notes in config.h.
-    display_fill_rect(0,   0, 80, 40, COLOR_RED);
-    display_fill_rect(80,  0, 80, 40, COLOR_GREEN);
-    display_fill_rect(160, 0, 80, 40, COLOR_BLUE);
-    display_fill_rect(240, 0, 80, 40, COLOR_WHITE);
+    draw_rect(0,   0, 80, 40, COLOR_RED);
+    draw_filled_rect(80,  0, 80, 40, COLOR_GREEN);
+    draw_filled_rect(160, 0, 80, 40, COLOR_BLUE);
+    draw_filled_rect(240, 0, 80, 40, COLOR_WHITE);
 
     // Single pixels
-    display_draw_pixel(10, 60, COLOR_WHITE);
-    display_draw_pixel(12, 60, COLOR_WHITE);
-    display_draw_pixel(14, 60, COLOR_WHITE);
+    draw_pixel(10, 60, COLOR_WHITE);
+    draw_pixel(12, 60, COLOR_WHITE);
+    draw_pixel(14, 60, COLOR_WHITE);
 
     // The image, at (150, 110)
-    display_draw_image(150, 110, 8, 8, smiley);
+    draw_image(150, 110, 8, 8, smiley);
 }
 
 int main(void) {
