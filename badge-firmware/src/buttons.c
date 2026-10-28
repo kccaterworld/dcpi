@@ -10,7 +10,7 @@ static const uint button_pins[BTN_COUNT] = {
 static bool down_now[BTN_COUNT];  // state from the latest buttons_update()
 static bool down_prev[BTN_COUNT]; // state from the one before
 
-void buttons_init(void) {
+void buttons_init() {
     for (int i = 0; i < BTN_COUNT; i++) {
         gpio_init(button_pins[i]);
         gpio_set_dir(button_pins[i], GPIO_IN);
@@ -20,7 +20,7 @@ void buttons_init(void) {
     }
 }
 
-void buttons_update(void) {
+void buttons_update() {
     for (int i = 0; i < BTN_COUNT; i++) {
         down_prev[i] = down_now[i];
         down_now[i] = !gpio_get(button_pins[i]); // low = pressed

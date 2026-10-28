@@ -20,7 +20,7 @@ void leds_set_timing(uint32_t t0h_ns, uint32_t t1h_ns, uint32_t tlow_ns) {
     tlow_cycles = ns_to_cycles(tlow_ns);
 }
 
-void leds_init(void) {
+void leds_init() {
     gpio_init(PIN_LEDS);
     gpio_set_dir(PIN_LEDS, GPIO_OUT);
     gpio_put(PIN_LEDS, 0);
@@ -41,7 +41,7 @@ void leds_set_all(uint8_t r, uint8_t g, uint8_t b) {
     }
 }
 
-void leds_show(void) {
+void leds_show() {
     // Interrupts off so USB can't stretch a pulse mid-bit.
     uint32_t irq_state = save_and_disable_interrupts();
 

@@ -16,10 +16,10 @@ typedef enum {
     BTN_COUNT // number of buttons, keep last
 } button_t;
 
-void buttons_init(void);
+void buttons_init();
 
 // Read all buttons. Call once per main loop pass, before the checks below.
-void buttons_update(void);
+void buttons_update();
 
 // True only on the update where the button went down.
 bool button_pressed(button_t b);
