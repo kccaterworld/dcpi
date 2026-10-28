@@ -44,6 +44,7 @@ static void draw_screen(void) {
 }
 
 int main(void) {
+    // wakey wakey behavior
     hardware_init(); // first, so the badge stays on
     uart_init_serial();
 
@@ -56,8 +57,10 @@ int main(void) {
 
     char line[128];
     uint32_t last_heartbeat = 0;
+    char alive = 1; // 1 means keep living, 0 means shutdown
 
-    while (true) {
+    // Game loop
+    while (alive) {
         if (uart_read_line(line, sizeof line)) {
             printf("ok received: %s\n", line);
         }
@@ -78,4 +81,6 @@ int main(void) {
 
         sleep_ms(1);
     }
+
+    // shutdown behavior
 }
