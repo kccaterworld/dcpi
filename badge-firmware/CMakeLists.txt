@@ -17,6 +17,8 @@ add_executable(pi_badge
     src/uart.c
     src/protocol.c
     src/display.c
+    src/draw.c
+    src/text.c
     src/touch.c
     src/battery.c
     src/leds.c
