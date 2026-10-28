@@ -4,6 +4,8 @@
 #include "config.h"
 #include "hardware.h"
 #include "display.h"
+#include "draw.h"
+#include "text.h"
 #include "leds.h"
 #include "touch.h"
 #include "uart.h"
@@ -24,7 +26,7 @@ static const uint16_t smiley[8 * 8] = {
 #undef _
 #undef Y
 
-static void draw_screen(void) {
+static void draw_screen() {
     display_clear(COLOR_BLACK);
 
     // Colored bars across the top: if these show in the wrong colors,
@@ -43,7 +45,7 @@ static void draw_screen(void) {
     draw_image(150, 110, 8, 8, smiley);
 }
 
-int main(void) {
+int main() {
     // wakey wakey behavior
     hardware_init(); // first, so the badge stays on
     uart_init_serial();
@@ -53,11 +55,27 @@ int main(void) {
     leds_show();
 
     display_init();
-    draw_screen();
+    //draw_screen();
 
     char line[128];
     uint32_t last_heartbeat = 0;
     char alive = 1; // 1 means keep living, 0 means shutdown
+    int ledsflash = 0; // 1 means flash leds, 0 means don't flash
+
+    // Every printable ASCII character (space through ~), then \x01, which has
+    // no glyph and should show the diamond replacement character.
+    char glyphs[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+                    " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
+                    "\x01"
+                    "    "
+                    "Hi Mr. DW, thanks   for teaching this!";
+    for (int i = 0; glyphs[i] != '\0'; i++) {
+        int x = 2 + (i % 20) * 16;
+        int y = 4 + (i / 20) * 34;
+        char note = glyphs[i];
+        text_draw_character(note, x, y, 0.5, COLOR_WHITE);
+    }
+    display_flush();
 
     // Game loop
     while (alive) {
@@ -66,7 +84,7 @@ int main(void) {
         }
 
         uint32_t now = to_ms_since_boot(get_absolute_time());
-        if (now - last_heartbeat >= 5000) {
+        if ((now - last_heartbeat >= 5000) && ledsflash) {
             last_heartbeat = now;
             printf("badge alive (%lu ms)\n", (unsigned long)now);
             leds_set_all(0, 0, 8); // all leds blue
