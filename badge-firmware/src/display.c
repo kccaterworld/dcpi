@@ -1,6 +1,3 @@
-#include <stdlib.h>
-#include <math.h>
-
 #include "display.h"
 #include "config.h"
 
@@ -55,126 +52,16 @@ static void pixpush(uint16_t color) {
     spiwrite(color & 0xFF);
 }
 // Deselect display and end the pixel stream
-static void pixend(void) {
+static void pixend() {
     gpio_put(PIN_DISPLAY_CS, 1); // 1 (high) = deselect/inactive
 }
 
-// DRAWING STUFFS YAY WAHOO
 static uint16_t framebuffer[DISPLAY_WIDTH * DISPLAY_HEIGHT]; // screen array
-int min_x, min_y, max_x, max_y; // bounding box of changed pixels
-
-void draw_pixel(int x, int y, uint16_t color) {
-    if (x < 0 || x >= DISPLAY_WIDTH || y < 0 || y >= DISPLAY_HEIGHT) return;
-    framebuffer[y * DISPLAY_WIDTH + x] = color;
-    if (x < min_x) min_x = x;
-    if (x > max_x) max_x = x;
-    if (y < min_y) min_y = y;
-    if (y > max_y) max_y = y;
-}
-
-void draw_line(int x0, int y0, int x1, int y1, uint16_t color) {
-    // Update bounding box
-    int lo_x = x0 < x1 ? x0 : x1, hi_x = x0 < x1 ? x1 : x0, lo_y = y0 < y1 ? y0 : y1, hi_y = y0 < y1 ? y1 : y0;
-    if (lo_x < 0) lo_x = 0;
-    if (lo_y < 0) lo_y = 0;
-    if (hi_x > DISPLAY_WIDTH - 1)  hi_x = DISPLAY_WIDTH - 1;
-    if (hi_y > DISPLAY_HEIGHT - 1) hi_y = DISPLAY_HEIGHT - 1;
-    if (lo_x <= hi_x && lo_y <= hi_y) { // skip if fully off-screen
-        if (lo_x < min_x) min_x = lo_x;
-        if (hi_x > max_x) max_x = hi_x;
-        if (lo_y < min_y) min_y = lo_y;
-        if (hi_y > max_y) max_y = hi_y;
-    }
-    int dx = abs(x1 - x0), sx = x0 < x1 ? 1 : -1, dy = -abs(y1 - y0), sy = y0 < y1 ? 1 : -1, err = dx + dy;
-    for (;;) {
-        if (x0 >= 0 && x0 < DISPLAY_WIDTH && y0 >= 0 && y0 < DISPLAY_HEIGHT) framebuffer[y0 * DISPLAY_WIDTH + x0] = color;
-        if (x0 == x1 && y0 == y1) break;
-        int e2 = 2 * err;
-        if (e2 >= dy) err += dy, x0 += sx;
-        if (e2 <= dx) err += dx, y0 += sy;
-    }
-}
-
-void draw_rect(int x, int y, int w, int h, uint16_t color) {
-    draw_line(x, y, x + w - 1, y, color);
-    draw_line(x + w - 1, y, x + w - 1, y + h - 1, color);
-    draw_line(x + w - 1, y + h - 1, x, y + h - 1, color);
-    draw_line(x, y + h - 1, x, y, color);
-}
-void draw_filled_rect(int x, int y, int w, int h, uint16_t color) {
-    if (x < 0) w += x, x = 0;
-    if (y < 0) h += y, y = 0;
-    if (x + w > DISPLAY_WIDTH)  w = DISPLAY_WIDTH - x;
-    if (y + h > DISPLAY_HEIGHT) h = DISPLAY_HEIGHT - y;
-
-    if (w <= 0 || h <= 0) return;
-    if (x < min_x) min_x = x;
-    if (x + w - 1 > max_x) max_x = x + w - 1;
-    if (y < min_y) min_y = y;
-    if (y + h - 1 > max_y) max_y = y + h - 1;
-
-    for (int row = y; row < y + h; row++) {
-        for (int i = 0; i < w; i++) framebuffer[row * DISPLAY_WIDTH + x + i] = color;
-    }
-}
-
-void draw_ellipse(int x, int y, int rx, int ry, uint16_t color) {
-    int x0 = rx, y0 = 0, err = rx * rx * (1 - ry) + ry * ry * (1 - rx);
-    while (x0 >= y0) {
-        if (x0 < 0) x0 = 0;
-        if (y0 < 0) y0 = 0;
-        if (x0 > rx) x0 = rx;
-        if (y0 > ry) y0 = ry;
-        draw_line(x - x0, y - y0, x + x0, y - y0, color);
-        draw_line(x - x0, y + y0, x + x0, y + y0, color);
-        draw_line(x - y0, y - x0, x - y0, y + x0, color);
-        draw_line(x + y0, y - x0, x + y0, y + x0, color);
-        if (err < 0) y0++, err += ry * ry * (2 * y0 + 1);
-        else x0--, err += rx * rx * (1 - 2 * x0);
-    }
-}
-
-void draw_filled_ellipse(int x, int y, int rx, int ry, uint16_t color) {
-    for (int y0 = -ry; y0 <= ry; y0++) {
-        int x0 = rx * sqrt(1 - (y0 * y0) / (ry * ry));
-        draw_line(x - x0, y + y0, x + x0, y + y0, color);
-    }
-}
-
-void draw_n_gon(int x, int y, int r, int n, uint16_t color) {
-    for (int i = 0; i < n; i++) {
-        int x1 = x + r * cos(2 * M_PI * i / n);
-        int y1 = y + r * sin(2 * M_PI * i / n);
-        int x2 = x + r * cos(2 * M_PI * (i + 1) / n);
-        int y2 = y + r * sin(2 * M_PI * (i + 1) / n);
-        draw_line(x1, y1, x2, y2, color);
-    }
-}
-
-void draw_filled_n_gon(int x, int y, int r, int n, uint16_t color) {
-    for (int i = 0; i < n; i++) {
-        int x1 = x + r * cos(2 * M_PI * i / n);
-        int y1 = y + r * sin(2 * M_PI * i / n);
-        int x2 = x + r * cos(2 * M_PI * (i + 1) / n);
-        int y2 = y + r * sin(2 * M_PI * (i + 1) / n);
-        draw_line(x1, y1, x2, y2, color);
-    }
-}
-
-void draw_image(int x, int y, int w, int h, const uint16_t *pixels) {
-    if (x + w > DISPLAY_WIDTH || y + h > DISPLAY_HEIGHT || w == 0 || h == 0) return;
-    for (uint32_t i = 0; i < (uint32_t)w * h; i++) {
-        framebuffer[(y + i / w) * DISPLAY_WIDTH + (x + i % w)] = pixels[i];
-    }
-    if (x < min_x) min_x = x;
-    if (x + w - 1 > max_x) max_x = x + w - 1;
-    if (y < min_y) min_y = y;
-    if (y + h - 1 > max_y) max_y = y + h - 1;
-}
+static int min_x = DISPLAY_WIDTH, min_y = DISPLAY_HEIGHT, max_x = -1, max_y = -1; // bounding box
 
 // --- Public API ---
 
-void display_init(void) {
+void display_init() {
     // Easily accessible display pins
     const uint pins[] = {
         PIN_DISPLAY_DC,
@@ -215,12 +102,29 @@ void display_init(void) {
 }
 
 void display_clear(uint16_t color) {
-    for (uint16_t y = 0; y < DISPLAY_HEIGHT; y++) {
-        draw_filled_rect(0, y, DISPLAY_WIDTH, 1, color);
-    }
+    for (int i = 0; i < DISPLAY_WIDTH * DISPLAY_HEIGHT; i++) framebuffer[i] = color;
+    display_mark_dirty(0, 0, DISPLAY_WIDTH - 1, DISPLAY_HEIGHT - 1);
 }
 
-void buffer_clear(void) {
+uint16_t *display_framebuffer(void) {
+    return framebuffer;
+}
+
+void display_mark_dirty(int x0, int y0, int x1, int y1) {
+    // Clamp to the screen
+    if (x0 < 0) x0 = 0;
+    if (y0 < 0) y0 = 0;
+    if (x1 > DISPLAY_WIDTH - 1)  x1 = DISPLAY_WIDTH - 1;
+    if (y1 > DISPLAY_HEIGHT - 1) y1 = DISPLAY_HEIGHT - 1;
+    if (x0 > x1 || y0 > y1) return; // fully off-screen
+
+    if (x0 < min_x) min_x = x0;
+    if (x1 > max_x) max_x = x1;
+    if (y0 < min_y) min_y = y0;
+    if (y1 > max_y) max_y = y1;
+}
+
+void buffer_clear() {
     for (uint16_t y = 0; y < DISPLAY_HEIGHT; y++) {
         for (uint16_t x = 0; x < DISPLAY_WIDTH; x++) {
             framebuffer[y * DISPLAY_WIDTH + x] = COLOR_BLACK;
@@ -232,7 +136,7 @@ void buffer_clear(void) {
     max_y = 0;
 }
 
-void display_flush(void) {
+void display_flush() {
     // check if box is empty
     if (min_x > max_x || min_y > max_y) return; // box is empty
     pixstart(min_x, min_y, max_x, max_y);
