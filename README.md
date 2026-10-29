@@ -6,15 +6,25 @@ Probably a Rust daemon on the Pi and C firmware (Pico SDK)
 ## Features
 
 System Monitor: CPU and Memory Stats (temp, speed, uptime)
+
 Process Manager: See and terminate processes, resource consumption
+
 Networking: Network scanning, connecting, disconnecting
+
 SSH: Status, enable, disable
+
 Systemd: Status, enable, disable, list
+
 Files: Browse and read files
+
 Power: Restart, shutdown
+
 Dashboards: Custom configurable screens
+
 LED Control: Controllable from other programs, fully programmable
+
 Logs: System and service logs
+
 
 ## Plan
 
