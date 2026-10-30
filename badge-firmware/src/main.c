@@ -9,61 +9,12 @@
 #include "leds.h"
 #include "touch.h"
 #include "uart.h"
+#include "buttons.h"
 
-// RGB565 8x8 image 
-#define _ COLOR_BLACK
-#define Y COLOR_YELLOW
-static const uint16_t smiley[8 * 8] = {
-    _, _, Y, Y, Y, Y, _, _,
-    _, Y, Y, Y, Y, Y, Y, _,
-    Y, Y, _, Y, Y, _, Y, Y,
-    Y, Y, Y, Y, Y, Y, Y, Y,
-    Y, _, Y, Y, Y, Y, _, Y,
-    Y, Y, _, _, _, _, Y, Y,
-    _, Y, Y, Y, Y, Y, Y, _,
-    _, _, Y, Y, Y, Y, _, _,
-};
-#undef _
-#undef Y
+char alive; // 1 means keep living, 0 means shutdown
 
-static void draw_screen() {
-    display_clear(COLOR_BLACK);
-
-    // Colored bars across the top: if these show in the wrong colors,
-    // see the notes in config.h.
-    draw_rect(0,   0, 80, 40, COLOR_RED);
-    draw_filled_rect(80,  0, 80, 40, COLOR_GREEN);
-    draw_filled_rect(160, 0, 80, 40, COLOR_BLUE);
-    draw_filled_rect(240, 0, 80, 40, COLOR_WHITE);
-
-    // Single pixels
-    draw_pixel(10, 60, COLOR_WHITE);
-    draw_pixel(12, 60, COLOR_WHITE);
-    draw_pixel(14, 60, COLOR_WHITE);
-
-    // The image, at (150, 110)
-    draw_image(150, 110, 8, 8, smiley);
-}
-
-int main() {
-    // wakey wakey behavior
-    hardware_init(); // first, so the badge stays on
-    uart_init_serial();
-
-    leds_init();
-    leds_set_all(0, 0, 0); // all leds off
-    leds_show();
-
-    display_init();
-    //draw_screen();
-
-    char line[128];
-    uint32_t last_heartbeat = 0;
-    char alive = 1; // 1 means keep living, 0 means shutdown
-    int ledsflash = 0; // 1 means flash leds, 0 means don't flash
-
-    // Every printable ASCII character (space through ~), then \x01, which has
-    // no glyph and should show the diamond replacement character.
+static void screen_preloop() {
+    // Text test
     char glyphs[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
                     " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
                     "\x01"
@@ -76,29 +27,86 @@ int main() {
         text_draw_character(note, x, y, 0.5, COLOR_WHITE);
     }
     display_flush();
+}
+static void leds_preloop() {
+    leds_set_all(0, 0, 0); // all leds off
+    leds_show();
+}
+
+
+
+static void input_checks(uint32_t now) {
+    bool combo;
+    combo = (button_held(BTN_A) || button_held(BTN_B));
+    if (combo != lit_leds[5]) {
+        if (combo) leds_set(5, 0, 128, 128);
+        else     leds_set(5, 0, 0, 0);
+        leds_show();
+        lit_leds[5] = combo;
+    }
+    
+    combo = (button_held(BTN_UP) || button_held(BTN_DOWN) || button_held(BTN_LEFT) || button_held(BTN_RIGHT));
+    if (combo != lit_leds[4]) {
+        if (combo) leds_set(4, 0, 128, 128);
+        else     leds_set(4, 0, 0, 0);
+        leds_show();
+        lit_leds[4] = combo;
+    }
+
+    combo = (button_held(BTN_START) || button_held(BTN_SELECT));
+    if (combo != lit_leds[6]) {
+        if (combo) leds_set(6, 0, 128, 128);
+        else     leds_set(6, 0, 0, 0);
+        if (button_held(BTN_START)) leds_set(0, 0, 128, 128);
+        else leds_set(0, 0, 0, 0);
+        if (button_held(BTN_SELECT)) leds_set(2, 0, 128, 128);
+        else leds_set(2, 0, 0, 0);
+        leds_show();
+        lit_leds[6] = combo;
+    }
+
+    combo = (button_held(BTN_FN) && button_held(BTN_SELECT) && button_held(BTN_START));
+    if (combo) {
+        alive = 0; // shutdown the badge
+    }
+}
+
+int main() {
+    // wakey wakey behavior
+    hardware_init(); // first, so the badge stays on
+    uart_init_serial();
+
+    // Initializations and stuffs to dos before the game loop
+    leds_init();
+    buttons_init();
+    display_init();
+    text_init();
+
+    leds_preloop();
+    screen_preloop();
+
+    // variables needed by the loop
+    char line[128];
+    alive = 1;
 
     // Game loop
     while (alive) {
+        uint32_t now = to_ms_since_boot(get_absolute_time());
+
+        buttons_update();
+        input_checks(now);
+
         if (uart_read_line(line, sizeof line)) {
             printf("ok received: %s\n", line);
-        }
-
-        uint32_t now = to_ms_since_boot(get_absolute_time());
-        if ((now - last_heartbeat >= 5000) && ledsflash) {
-            last_heartbeat = now;
-            printf("badge alive (%lu ms)\n", (unsigned long)now);
-            leds_set_all(0, 0, 8); // all leds blue
-            leds_show();
-            leds_set_all(0, 8, 0); // all leds green
-            leds_show();
-            leds_set_all(8, 0, 0); // all leds red
-            leds_show();
-            leds_set_all(0, 0, 0); // all leds off
-            leds_show();
         }
 
         sleep_ms(1);
     }
 
     // shutdown behavior
+    leds_set_all(0, 0, 0); // all leds off
+    leds_show();
+    display_clear( RGB(0, 0, 0) );
+    display_flush();
+
 }
