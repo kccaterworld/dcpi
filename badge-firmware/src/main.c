@@ -57,12 +57,24 @@ static void input_checks(uint32_t now) {
     if (combo != lit_leds[6]) {
         if (combo) leds_set(6, 0, 128, 128);
         else     leds_set(6, 0, 0, 0);
-        if (button_held(BTN_START)) leds_set(0, 0, 128, 128);
-        else leds_set(0, 0, 0, 0);
-        if (button_held(BTN_SELECT)) leds_set(2, 0, 128, 128);
-        else leds_set(2, 0, 0, 0);
         leds_show();
         lit_leds[6] = combo;
+    }
+
+    combo = button_held(BTN_START);
+    if (combo != lit_leds[0]) {
+        if (combo) leds_set(0, 0, 128, 128);
+        else     leds_set(0, 0, 0, 0);
+        leds_show();
+        lit_leds[0] = combo;
+    }
+
+    combo = button_held(BTN_SELECT);
+    if (combo != lit_leds[2]) {
+        if (combo) leds_set(2, 0, 128, 128);
+        else     leds_set(2, 0, 0, 0);
+        leds_show();
+        lit_leds[2] = combo;
     }
 
     combo = (button_held(BTN_FN) && button_held(BTN_SELECT) && button_held(BTN_START));
@@ -109,4 +121,7 @@ int main() {
     display_clear( RGB(0, 0, 0) );
     display_flush();
 
+    gpio_put(PIN_DISPLAY_BL, 0);
+    gpio_put(PIN_POWER_HOLD, 0);
+    // currently still requires a reset before power on
 }
