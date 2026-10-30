@@ -3,8 +3,15 @@
 
 // Same order as button_t in buttons.h.
 static const uint button_pins[BTN_COUNT] = {
-    PIN_BTN_UP, PIN_BTN_DOWN, PIN_BTN_LEFT, PIN_BTN_RIGHT,
-    PIN_BTN_A, PIN_BTN_B, PIN_BTN_START, PIN_BTN_SELECT, PIN_BTN_FN,
+    PIN_BTN_UP,
+    PIN_BTN_DOWN,
+    PIN_BTN_LEFT,
+    PIN_BTN_RIGHT,
+    PIN_BTN_A,
+    PIN_BTN_B,
+    PIN_BTN_START,
+    PIN_BTN_SELECT,
+    PIN_BTN_FN,
 };
 
 static bool down_now[BTN_COUNT];  // state from the latest buttons_update()
