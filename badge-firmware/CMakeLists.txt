@@ -19,6 +19,7 @@ add_executable(pi_badge
     src/display.c
     src/draw.c
     src/text.c
+    src/font_data.S
     src/touch.c
     src/battery.c
     src/leds.c
@@ -29,6 +30,13 @@ add_executable(pi_badge
 
 target_include_directories(pi_badge PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+# font_data.S adds files in assets/ with .incbin
+file(GLOB FONT_FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/fonts/*.font)
+set_source_files_properties(src/font_data.S PROPERTIES
+    COMPILE_OPTIONS "-Wa,-I${CMAKE_CURRENT_SOURCE_DIR}/assets"
+    OBJECT_DEPENDS "${FONT_FILES}"
 )
 
 target_link_libraries(pi_badge
