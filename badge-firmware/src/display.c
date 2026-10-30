@@ -6,7 +6,7 @@
 // Bit bang one (1) spi byte
 static void spiwrite(uint8_t b) {
     for (int i = 7; i >= 0; i--) {
-        gpio_put(PIN_DISPLAY_MOSI, (b >> i) & 1); // Set MOSI pin to the current bit of the byte
+        gpio_put(PIN_DISPLAY_COPI, (b >> i) & 1); // Set MOSI pin to the current bit of the byte
         busy_wait_at_least_cycles(DISPLAY_BITBANG_DELAY);
         gpio_put(PIN_DISPLAY_SCK, 1); // 1 (high) = start clock
         busy_wait_at_least_cycles(DISPLAY_BITBANG_DELAY);
@@ -65,7 +65,7 @@ void display_init() {
     // Easily accessible display pins
     const uint pins[] = {
         PIN_DISPLAY_DC,
-        PIN_DISPLAY_MOSI,
+        PIN_DISPLAY_COPI,
         PIN_DISPLAY_SCK,
         PIN_DISPLAY_CS,
         PIN_DISPLAY_BL
