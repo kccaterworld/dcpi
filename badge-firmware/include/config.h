@@ -42,7 +42,7 @@
 // Display (2.4" 240x320, ST7789 per the schematic note)
 // These pins don't match the chip's hardware SPI, so display.c bit-bangs them.
 #define PIN_DISPLAY_DC      DEFCON32_BADGE_DISPLAY_RS_PIN  // GPIO 5  (Data/Command)
-#define PIN_DISPLAY_MOSI    DEFCON32_BADGE_DISPLAY_DO_PIN  // GPIO 6  (Master Out Slave In)
+#define PIN_DISPLAY_COPI    DEFCON32_BADGE_DISPLAY_DO_PIN  // GPIO 6  (Controller Out Peripheral In)
 #define PIN_DISPLAY_SCK     DEFCON32_BADGE_DISPLAY_SCK_PIN // GPIO 8  (Serial ClocK)
 #define PIN_DISPLAY_CS      DEFCON32_BADGE_DISPLAY_CS_PIN  // GPIO 9  (active low Chip Select)
 #define PIN_DISPLAY_BL      DEFCON32_BADGE_DISPLAY_BL_PIN  // GPIO 10 (active high BackLight)
