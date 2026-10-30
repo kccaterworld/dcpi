@@ -7,14 +7,14 @@ Probably a Rust daemon on the Pi and C firmware (Pico SDK)
 
 - **Microcontroller**: RP2350A
 - **Display**: WS2812 (chat weve got touch screen nice)
-- **Storage**: Micro SD card
+- **Storage**: Micro SD card slot
 - **Networking**: Nope (ir ig but like...no)
 - **Audio**: Tiny crappy speaker
 - **IR**: receive and transmit
 - **GPIO**: 30 pins (0–29)
-- **RAM**: 520KB
+- **RAM**: 520KB on-chip SRAM
 - **Flash**: 2MB
-- **Processor**: Dual Arm M33 or Dual RISC-V
+- **Processors**: Dual Arm Cortex-M33 or dual Hazard3 RISC-V @ 150MHz
 - **Built in battery**: Yes
 - **Ports**: USB-C and SAO header
 
@@ -81,7 +81,7 @@ Based on board header i found, i think theres more...
 |   2  | I2C SDA                    | UNDEFINED        | I2C1 Data. touch control? maybe SAO?              |
 |   3  | I2C SCL                    | UNDEFINED        | I2C1 Clock                                        |
 |   4  | RGB LEDs (WS2812)          | PIN_LEDS         | Driven by PIO0                                    |
-|   5  | Display data/command       | PIN_DISPLAY_DC   | -                                                 |
+|   5  | Display data/command       | PIN_DISPLAY_DC   | RS in docs for Register Select                    |
 |   6  | Display data out           | PIN_DISPLAY_COPI | Bit-banged (not hardware SPI pins)                |
 |   7  | IR transceiver shutdown    | UNDEFINED        | -                                                 |
 |   8  | Display clock              | PIN_DISPLAY_SCK  | Bit-banged                                        |
@@ -101,8 +101,8 @@ Based on board header i found, i think theres more...
 |  22  | Button Start               | PIN_BTN_START    | Pull-up, low = pressed                            |
 |  23  | Button Select              | PIN_BTN_SELECT   | Pull-up, low = pressed                            |
 |  24  | Button Fn                  | PIN_BTN_FN       | Pull-up, low = pressed                            |
-|  25  | Speaker                    | UNDEFINED        | Someday I'll implement an audio driver...         |
-|  26  | Not in board header        | N/A              | Note to self: see if it's somewhere else          |
-|  27  | IR receive                 | UNDEFINED        | Eventually going to be used (hehe fun things)     |
-|  28  | IR transmit                | UNDEFINED        | Eventually going to be used (hehe fun things)     |
-|  29  | Not in board header        | N/A              | On the SAO header. UART0 RX                       |
+|  25  | Speaker Out                | UNDEFINED        | Someday I'll implement an audio driver...         |
+|  26  | ADC         | N/A              | ADC0          |
+|  27  | IR RX                      | UNDEFINED        | Eventually going to be used (hehe fun things)     |
+|  28  | IR TX                      | UNDEFINED        | Eventually going to be used (hehe fun things)     |
+|  29  | ADC Battery Voltage Sensor | UNDEFINED        | Analog input for battery life on ADC3             |
