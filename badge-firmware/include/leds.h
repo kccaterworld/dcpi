@@ -3,6 +3,12 @@
 
 #include <stdint.h>
 
+#include "config.h" // LED_COUNT
+
+// 1 if that LED is currently set to a non-black color. Kept up to date by
+// leds_set / leds_set_all. Defined in leds.c; this only declares it.
+extern char lit_leds[LED_COUNT];
+
 void leds_init(void);
 
 // Set one LED's color in the buffer (index 0 .. LED_COUNT-1). Not shown until leds_show().
