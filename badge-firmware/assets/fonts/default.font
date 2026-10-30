@@ -1,0 +1,554 @@
+# chat i made a font AND a file format
+
+#   gstart <c>
+#   <stroke> <numbers...>
+#   gend
+
+# wow so difficult
+
+# Stroke types:
+#   line    x0 y0 x1 y1                     (start, end)
+#   bezier  x0 y0 x1 y1 x2 y2 x3 y3         (start, 2 control points, end)
+#   hermite x0 y0 x1 y1 rx0 ry0 rx1 ry1     (start, end, start/end ROC)
+#   dot     cx cy r                         (center, radius)
+
+# "#" means comment, blank line is ignored
+# if no glyph def, diamond replacement character is drawn
+
+
+gstart a
+bezier 24 22 14 29 2 22 2 13
+bezier 2 13 2 4 14 -3 24 4
+line 24 26 24 0
+gend
+
+gstart b
+line 2 46 2 0
+bezier 2 21 12 29 25 23 25 13
+bezier 25 13 25 3 12 -3 2 5
+gend
+
+gstart c
+bezier 24 21 16 28 2 24 2 13
+bezier 2 13 2 2 16 -2 24 5
+gend
+
+gstart d
+line 24 46 24 0
+bezier 24 21 14 29 1 23 1 13
+bezier 1 13 1 3 14 -3 24 5
+gend
+
+gstart e
+line 1 14 24 14
+bezier 24 14 24 27 1 27 1 13
+bezier 1 13 1 0 14 -2 23 5
+gend
+
+gstart f
+bezier 24 42 20 48 8 48 8 36
+line 8 36 8 0
+line 0 26 18 26
+gend
+
+gstart g
+bezier 24 21 14 29 2 23 2 13
+bezier 2 13 2 3 14 -3 24 4
+line 24 26 24 -4
+bezier 24 -4 24 -13 10 -14 3 -9
+gend
+
+gstart h
+line 2 46 2 0
+bezier 2 20 10 28 24 25 24 14
+line 24 14 24 0
+gend
+
+gstart i
+line 13 26 13 0
+dot 13 37 2
+gend
+
+gstart j
+line 16 26 16 -4
+bezier 16 -4 16 -13 6 -14 1 -10
+dot 16 37 2
+gend
+
+gstart k
+line 2 46 2 0
+line 24 26 2 10
+line 10 16 24 0
+gend
+
+gstart l
+line 10 46 10 0
+gend
+
+gstart m
+line 2 26 2 0
+bezier 2 20 8 28 13 25 13 14
+line 13 14 13 0
+bezier 13 20 19 28 25 25 25 14
+line 25 14 25 0
+gend
+
+gstart n
+line 2 26 2 0
+bezier 2 20 10 28 24 25 24 14
+line 24 14 24 0
+gend
+
+gstart o
+bezier 2 13 2 27 24 27 24 13
+bezier 24 13 24 -1 2 -1 2 13
+gend
+
+gstart p
+line 2 26 2 -12
+bezier 2 21 12 29 25 23 25 13
+bezier 25 13 25 3 12 -3 2 5
+gend
+
+gstart q
+line 24 26 24 -12
+bezier 24 21 14 29 1 23 1 13
+bezier 1 13 1 3 14 -3 24 5
+gend
+
+gstart r
+line 2 26 2 0
+bezier 2 19 8 28 18 27 23 22
+gend
+
+gstart s
+bezier 23 22 18 28 3 27 4 19
+bezier 4 19 5 12 21 15 22 7
+bezier 22 7 23 -1 8 -2 3 4
+gend
+
+gstart t
+line 10 40 10 4
+bezier 10 4 10 -2 18 0 22 3
+line 1 26 20 26
+gend
+
+gstart u
+line 2 26 2 6
+bezier 2 6 2 -3 16 -3 24 5
+line 24 26 24 0
+gend
+
+gstart v
+line 2 26 13 0
+line 13 0 24 26
+gend
+
+gstart w
+line 1 26 7 0
+line 7 0 13 18
+line 13 18 19 0
+line 19 0 25 26
+gend
+
+gstart x
+line 2 26 24 0
+line 2 0 24 26
+gend
+
+gstart y
+line 2 26 13 0
+line 24 26 7 -12
+gend
+
+gstart z
+line 2 26 24 26
+line 24 26 2 0
+line 2 0 24 0
+gend
+
+gstart A
+line 1 0 13 44
+line 13 44 25 0
+line 5 16 21 16
+gend
+
+gstart B
+line 3 44 3 0
+bezier 3 44 18 44 22 38 22 33
+bezier 22 33 22 26 14 23 3 23
+bezier 3 23 18 23 25 20 25 12
+bezier 25 12 25 4 16 0 3 0
+gend
+
+gstart C
+bezier 24 38 16 46 2 40 2 22
+bezier 2 22 2 4 16 -2 24 6
+gend
+
+gstart D
+line 3 44 3 0
+bezier 3 44 20 44 25 34 25 22
+bezier 25 22 25 10 20 0 3 0
+gend
+
+gstart E
+line 3 44 3 0
+line 3 44 24 44
+line 3 22 20 22
+line 3 0 24 0
+gend
+
+gstart F
+line 3 44 3 0
+line 3 44 24 44
+line 3 22 20 22
+gend
+
+gstart G
+bezier 24 38 16 46 2 40 2 22
+bezier 2 22 2 4 18 -2 24 8
+line 24 8 24 18
+line 24 18 15 18
+gend
+
+gstart H
+line 3 44 3 0
+line 24 44 24 0
+line 3 22 24 22
+gend
+
+gstart I
+line 13 44 13 0
+gend
+
+gstart J
+line 20 44 20 8
+bezier 20 8 20 -3 6 -4 2 6
+gend
+
+gstart K
+line 3 44 3 0
+line 24 44 3 20
+line 10 26 24 0
+gend
+
+gstart L
+line 3 44 3 0
+line 3 0 24 0
+gend
+
+gstart M
+line 2 0 2 44
+line 2 44 13 16
+line 13 16 24 44
+line 24 44 24 0
+gend
+
+gstart N
+line 3 0 3 44
+line 3 44 24 0
+line 24 0 24 44
+gend
+
+gstart O
+bezier 2 22 2 45 25 45 25 22
+bezier 25 22 25 -1 2 -1 2 22
+gend
+
+gstart P
+line 3 44 3 0
+bezier 3 44 20 44 25 38 25 31
+bezier 25 31 25 24 18 20 3 20
+gend
+
+gstart Q
+bezier 2 22 2 45 25 45 25 22
+bezier 25 22 25 -1 2 -1 2 22
+line 17 10 27 -4
+gend
+
+gstart R
+line 3 44 3 0
+bezier 3 44 20 44 25 38 25 31
+bezier 25 31 25 24 18 20 3 20
+line 12 20 25 0
+gend
+
+gstart S
+bezier 24 38 18 46 3 44 3 33
+bezier 3 33 3 22 24 25 24 12
+bezier 24 12 24 -1 8 -2 2 6
+gend
+
+gstart T
+line 13 44 13 0
+line 2 44 25 44
+gend
+
+gstart U
+line 3 44 3 12
+bezier 3 12 3 -3 24 -3 24 12
+line 24 12 24 44
+gend
+
+gstart V
+line 2 44 13 0
+line 13 0 24 44
+gend
+
+gstart W
+line 1 44 7 0
+line 7 0 13 30
+line 13 30 19 0
+line 19 0 25 44
+gend
+
+gstart X
+line 2 44 24 0
+line 2 0 24 44
+gend
+
+gstart Y
+line 2 44 13 22
+line 24 44 13 22
+line 13 22 13 0
+gend
+
+gstart Z
+line 2 44 24 44
+line 24 44 2 0
+line 2 0 24 0
+gend
+
+gstart 0
+bezier 2 22 2 45 25 45 25 22
+bezier 25 22 25 -1 2 -1 2 22
+line 6 8 21 36
+gend
+
+gstart 1
+line 5 34 13 44
+line 13 44 13 0
+line 4 0 22 0
+gend
+
+gstart 2
+bezier 3 34 4 45 24 45 24 32
+bezier 24 32 24 22 6 12 2 0
+line 2 0 24 0
+gend
+
+gstart 3
+bezier 3 38 8 46 24 44 24 34
+bezier 24 34 24 26 14 23 8 23
+bezier 8 23 18 23 25 20 25 11
+bezier 25 11 25 0 8 -3 2 5
+gend
+
+gstart 4
+line 18 44 1 12
+line 1 12 25 12
+line 18 44 18 0
+gend
+
+gstart 5
+line 22 44 6 44
+line 6 44 5 26
+bezier 5 26 16 30 25 24 25 13
+bezier 25 13 25 1 9 -3 2 4
+gend
+
+gstart 6
+bezier 22 40 10 47 3 32 3 14
+bezier 3 14 3 0 24 0 24 13
+bezier 24 13 24 24 5 24 3 14
+gend
+
+gstart 7
+line 2 44 25 44
+line 25 44 9 0
+gend
+
+gstart 8
+bezier 13 22 2 23 2 44 13 44
+bezier 13 44 25 44 25 23 13 22
+bezier 13 22 1 21 1 0 13 0
+bezier 13 0 26 0 26 21 13 22
+gend
+
+gstart 9
+bezier 5 4 16 -3 24 12 24 30
+bezier 24 30 24 44 3 44 3 31
+bezier 3 31 3 20 22 20 24 30
+gend
+
+gstart .
+dot 13 2 2
+gend
+
+gstart ,
+dot 13 2 2
+line 14 1 10 -7
+gend
+
+gstart !
+line 13 44 13 12
+dot 13 2 2
+gend
+
+gstart ?
+bezier 3 36 4 46 24 46 23 34
+bezier 23 34 22 24 13 24 13 14
+dot 13 2 2
+gend
+
+gstart :
+dot 13 24 2
+dot 13 2 2
+gend
+
+gstart ;
+dot 13 24 2
+dot 13 2 2
+line 14 1 10 -7
+gend
+
+gstart '
+line 13 44 13 34
+gend
+
+gstart "
+line 8 44 8 34
+line 18 44 18 34
+gend
+
+gstart -
+line 5 16 21 16
+gend
+
+gstart _
+line 1 -4 25 -4
+gend
+
+gstart (
+bezier 17 46 5 34 5 2 17 -10
+gend
+
+gstart )
+bezier 9 46 21 34 21 2 9 -10
+gend
+
+gstart [
+line 17 46 9 46
+line 9 46 9 -10
+line 9 -10 17 -10
+gend
+
+gstart ]
+line 9 46 17 46
+line 17 46 17 -10
+line 17 -10 9 -10
+gend
+
+gstart {
+bezier 18 46 10 46 13 18 6 18
+bezier 6 18 13 18 10 -10 18 -10
+gend
+
+gstart }
+bezier 8 46 16 46 13 18 20 18
+bezier 20 18 13 18 16 -10 8 -10
+gend
+
+gstart /
+line 3 -2 23 46
+gend
+
+gstart \
+line 3 46 23 -2
+gend
+
+gstart *
+line 13 40 13 24
+line 6 36 20 28
+line 6 28 20 36
+gend
+
+gstart #
+line 10 40 8 4
+line 19 40 17 4
+line 3 28 24 28
+line 2 16 23 16
+gend
+
+gstart %
+line 22 44 4 0
+bezier 2 36 2 43 12 43 12 36
+bezier 12 36 12 29 2 29 2 36
+bezier 14 8 14 15 24 15 24 8
+bezier 24 8 24 1 14 1 14 8
+gend
+
+gstart &
+bezier 25 0 12 14 6 26 6 36
+bezier 6 36 6 46 20 46 20 36
+bezier 20 36 20 26 2 22 2 10
+bezier 2 10 2 -2 18 -4 24 14
+gend
+
+gstart @
+bezier 8 22 8 30 18 30 18 22
+bezier 18 22 18 14 8 14 8 22
+line 18 30 18 16
+bezier 18 16 18 10 26 12 26 22
+bezier 26 22 26 44 1 44 1 22
+bezier 1 22 1 2 18 0 24 6
+gend
+
+gstart 32
+gend
+
+gstart $
+bezier 23 36 18 43 4 42 4 32
+bezier 4 32 4 22 23 25 23 13
+bezier 23 13 23 2 8 1 3 8
+line 13 48 13 -4
+gend
+
+gstart <
+line 22 34 4 20
+line 4 20 22 6
+gend
+
+gstart >
+line 4 34 22 20
+line 22 20 4 6
+gend
+
+gstart =
+line 4 26 22 26
+line 4 14 22 14
+gend
+
+gstart ^
+line 5 32 13 44
+line 13 44 21 32
+gend
+
+gstart +
+line 13 31 13 9
+line 4 20 22 20
+gend
+
+gstart `
+line 10 44 16 36
+gend
+
+gstart |
+line 13 46 13 -10
+gend
+
+gstart ~
+bezier 3 18 8 28 18 12 23 22
+gend
